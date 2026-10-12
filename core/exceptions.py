@@ -32,7 +32,28 @@ class MemberNotFoundError(LibraryError):
     """Exception raised when a member is not found."""
     def __init__(self, message: str, status_code: int = status.HTTP_404_NOT_FOUND):
         super().__init__(status_code, message)
-        
+
+class BookUnavailableError(LibraryError):
+    """Exception raised when a book is unavailable."""
+    def __init__(self, message: str, status_code: int = status.HTTP_409_CONFLICT):
+        super().__init__(status_code, message)
+
+class LoanNotFoundError(LibraryError):
+    """Exception raised when a loan is not found."""
+    def __init__(self, message: str, status_code: int = status.HTTP_404_NOT_FOUND):
+        super().__init__(status_code, message)
+
+class DuplicateLoanError(LibraryError):
+    """Exception raised when a duplicate loan is attempted."""
+    def __init__(self, message: str, status_code: int = status.HTTP_409_CONFLICT):
+        super().__init__(status_code, message)
+
+
+class LoanLimitExceededError(LibraryError):
+    """Exception raised when a member exceeds the loan limit."""
+    def __init__(self, message: str, status_code: int = status.HTTP_409_CONFLICT):
+        super().__init__(status_code, message)
+    
 def register_exception_handlers(app):
     @app.exception_handler(LibraryError)
     def library_exception_handler(request: Request, exc: LibraryError):

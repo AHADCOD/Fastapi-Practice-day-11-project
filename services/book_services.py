@@ -4,7 +4,7 @@ from core.utilities import validate_isbn10_strict, validate_isbn13_strict
 from core.dependencies import PaginationParams, pagination
 books = {}
 
-def check_book_exists(book_id: int):
+def check_book(book_id: int):
     if book_id not in list(books.keys()):
         raise BookNotFoundError(message="Book not found.")
     return books[book_id]
@@ -45,11 +45,11 @@ def get_available_book_service(pagination_params: PaginationParams):
 
 
 def get_book_service(book_id: int):
-    book = check_book_exists(book_id)
+    book = check_book(book_id)
     return {"id": book_id, **book}
 
 def update_book_service(book_id: int, book_update: dict):
-    book = check_book_exists(book_id)
+    book = check_book(book_id)
     
     for key, value in book_update.items():
         if value is not None:

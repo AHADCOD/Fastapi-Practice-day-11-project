@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator, model_validator, ConfigDict
+from pydantic import BaseModel, Field, field_validator, model_validator, ConfigDict, computed_field
 from core.utilities import validate_isbn10_strict, validate_isbn13_strict
 from core.exceptions import ISBNValidationError, LibraryError
 from enum import Enum
@@ -40,6 +40,11 @@ class BookBase(BaseModel):
         if self.available_copies > self.total_copies:
             raise LibraryError(status_code=400, message="Available copies cannot exceed total copies")
         return self
+
+    @computed_field
+    @property
+    def is_available(self) -> bool:
+        return self.available_copies > 0
 
 class BookIn(BookBase):
     pass
