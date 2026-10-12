@@ -29,7 +29,6 @@ class LoanOut(LoanBase):
     @property
     def is_overdue(self) -> bool:
         return (self.status == ReturnStatus.ACTICE and self.due_date is not None and self.due_date < datetime.now(UTC))
-        return False
 
 
 
