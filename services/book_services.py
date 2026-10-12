@@ -1,4 +1,4 @@
-from core.exceptions import DuplicateISBNError, BookNotFoundError
+from core.exceptions import DuplicateISBNError, BookNotFoundError, BookHasActiveLoansError
 from schemas.books import Genre
 from core.utilities import validate_isbn10_strict, validate_isbn13_strict
 from core.dependencies import PaginationParams, pagination
@@ -56,5 +56,13 @@ def update_book_service(book_id: int, book_update: dict):
             book[key] = value
     books[book_id] = book
     return {"id": book_id, **book}
+
+def delete_book_service(book_id: int):
+    from .loan_services import loans
+    book = check_book(book_id)
+    for loan in loans.values():
+        if loan["book_id"] == book_id and loan["status"] == "active":
+            raise BookHasActiveLoansError(message="Cannot delete book with active loans.")
+    del books[book_id]
 
 

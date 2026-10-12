@@ -53,6 +53,11 @@ class LoanLimitExceededError(LibraryError):
     """Exception raised when a member exceeds the loan limit."""
     def __init__(self, message: str, status_code: int = status.HTTP_409_CONFLICT):
         super().__init__(status_code, message)
+
+class BookHasActiveLoansError(LibraryError):
+    """Exception raised when a book has active loans."""
+    def __init__(self, message: str, status_code: int = status.HTTP_409_CONFLICT):
+        super().__init__(status_code, message)
     
 def register_exception_handlers(app):
     @app.exception_handler(LibraryError)

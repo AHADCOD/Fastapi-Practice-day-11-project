@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, Query, Path
 from schemas.books import BookIn, BookOut, Genre, BookUpdate
-from services.book_services import create_book_service, get_books_service, get_available_book_service, get_book_service, update_book_service
+from services.book_services import create_book_service, delete_book_service, get_books_service, get_available_book_service, get_book_service, update_book_service
 from core.dependencies import require_admin, PaginationParams, get_pagination_params
 from typing import Annotated
 BookRouter = APIRouter(prefix="/books", tags=["Books"])
@@ -29,3 +29,7 @@ def get_book(book_id: Annotated[int, Path(description="The ID of the book to ret
 def update_book(book_id: Annotated[int, Path(description="The ID of the book to update", gt=0)], book: BookUpdate):
     book_dict = book.model_dump(exclude_unset=True)
     return update_book_service(book_id, book_dict)
+
+@BookRouter.delete("/{book_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
+def delete_book(book_id: Annotated[int, Path(..., gt=0)]):
+    return delete_book_service(book_id)
